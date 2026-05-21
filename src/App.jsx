@@ -48,7 +48,68 @@ function ProtectedRoute({ children }) {
   return user ? children : <Navigate to="/login" replace />;
 }
 
+import { isSupabaseConfigured } from './supabase/client';
+import { Database, AlertTriangle } from 'lucide-react';
+
 function App() {
+  if (!isSupabaseConfigured) {
+    return (
+      <div
+        className="flex items-center justify-center min-h-screen p-6"
+        style={{ backgroundColor: 'var(--bg)', color: 'var(--text)' }}
+      >
+        <div
+          className="w-full max-w-lg p-8 rounded-[var(--radius-lg)] border border-border bg-surface space-y-6 shadow-md"
+        >
+          <div className="flex items-center gap-3 text-accent">
+            <Database size={24} />
+            <h1 className="text-xl font-bold tracking-tight">Supabase Configuration Required</h1>
+          </div>
+
+          <p className="text-sm leading-relaxed text-text-2">
+            KAIZEN uses Supabase for database persistence, authentication, and realtime synchronization. To launch the application, you need to configure your Supabase credentials.
+          </p>
+
+          <div className="space-y-4 pt-2">
+            <div className="p-4 rounded-[var(--radius-md)] bg-surface-2 border border-border space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-accent flex items-center gap-1.5">
+                <AlertTriangle size={12} />
+                Vercel Deployments
+              </span>
+              <p className="text-xs text-text-2">
+                Add the following keys in your Vercel Project Dashboard under <strong>Settings &gt; Environment Variables</strong>:
+              </p>
+              <pre className="text-xs font-mono p-3 rounded bg-surface-3 border border-border select-all overflow-x-auto text-left leading-5 text-text">
+                VITE_SUPABASE_URL=your_supabase_project_url<br />
+                VITE_SUPABASE_ANON_KEY=your_supabase_anon_public_key
+              </pre>
+            </div>
+
+            <div className="p-4 rounded-[var(--radius-md)] bg-surface-2 border border-border space-y-2">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-muted">
+                Local Development
+              </span>
+              <p className="text-xs text-text-2">
+                Create a <code>.env</code> file in the project root directory and add the environment variables listed above.
+              </p>
+            </div>
+          </div>
+
+          <div className="text-center pt-2">
+            <a
+              href="https://supabase.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1 text-xs font-medium text-accent hover:underline"
+            >
+              Get started with Supabase &rarr;
+            </a>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Routes>
       {/* Auth */}
