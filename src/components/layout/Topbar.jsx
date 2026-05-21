@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useAuth } from '../../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Menu, Bell, Search, Moon, Sun, LogOut } from 'lucide-react';
+import { isDemoMode } from '../../supabase/client';
 
 // Inline ThemeToggle to avoid next-themes dependency issue
 function ThemeButton() {
@@ -89,6 +90,28 @@ export default function Topbar({ onMenuClick, onNotificationsClick }) {
 
       {/* ── Right: Actions ── */}
       <div className="flex items-center gap-2 flex-shrink-0">
+
+        {/* Demo Mode Badge */}
+        {isDemoMode && (
+          <div
+            onClick={() => {
+              localStorage.removeItem('kaizen-demo-mode');
+              localStorage.removeItem('kaizen_mock_db');
+              window.location.reload();
+            }}
+            className="flex items-center gap-1.5 px-2.5 h-8 rounded-[var(--radius)] cursor-pointer hover:opacity-80 transition-opacity duration-200"
+            style={{
+              backgroundColor: 'var(--accent-soft)',
+              border: '1px solid var(--border)',
+            }}
+            title="Running in Local Demo Mode. Click to exit and configure Supabase."
+          >
+            <div className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+            <span className="text-[10px] font-bold uppercase tracking-wider" style={{ color: 'var(--accent)' }}>
+              Demo Mode
+            </span>
+          </div>
+        )}
 
         {/* Systems status badge — tablet+ */}
         <div
